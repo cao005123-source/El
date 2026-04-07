@@ -868,7 +868,6 @@
         document.getElementById("whatsappBtn").onclick = showWhatsappPanel;
         document.getElementById("closePaypalBtn").onclick = closeAllPanels;
         document.getElementById("closeWhatsappBtn").onclick = closeAllPanels;
-        document.getElementById("mockPaypalButton")?.addEventListener("click", () => alert("PayPal checkout simulation. You can integrate real PayPal SDK here."));
         const modal = document.getElementById("detailModal");
         document.getElementById("closeDetailBtn").onclick = () => modal.classList.remove("show");
         modal.onclick = (e) => { if(e.target === modal) modal.classList.remove("show"); };
