@@ -1,55 +1,882 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的网站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Elai Oud · Premium Selection</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #faf7f2;
+            font-family: 'Segoe UI', 'Poppins', 'Roboto', system-ui, -apple-system, 'Microsoft YaHei', sans-serif;
+            color: #2c241a;
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(123, 90, 68, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(180, 95, 43, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            position: relative;
+            border-bottom: 1px solid #e3d9cf;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            color: #4a2e23;
+            letter-spacing: 4px;
+            font-weight: 500;
+        }
+        .hero .sub {
+            font-size: 1rem;
+            color: #7a5e4c;
+            letter-spacing: 2px;
+        }
+
+        .search-section {
+            max-width: 560px;
+            margin: 0 auto 1.5rem auto;
+            padding: 0 0.5rem;
+        }
+        .search-box {
             display: flex;
+            gap: 0.6rem;
+            background: white;
+            border-radius: 60px;
+            padding: 0.3rem 0.3rem 0.3rem 1.2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            border: 1px solid #e3d9cf;
+        }
+        .search-box input {
+            flex: 1;
+            border: none;
+            padding: 0.75rem 0;
+            font-size: 1rem;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            color: #2c241a;
+        }
+        .search-box input::placeholder {
+            color: #bbaa99;
+        }
+        .search-box button {
+            background: #7b5a44;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 48px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        .search-box button:hover {
+            background: #5e3f2c;
+            transform: scale(1.02);
+        }
+        .search-info {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #b29278;
+            margin-top: 0.6rem;
+            cursor: pointer;
+            display: inline-block;
+            width: auto;
+            padding: 0 10px;
+            transition: all 0.3s;
+        }
+        .search-info:hover {
+            color: #7b5a44;
+        }
+
+        .category-bar {
+            display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+        .cat-btn {
+            background: transparent;
+            border: 1.5px solid #dccfbc;
+            padding: 0.6rem 1.8rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #4f3a2c;
+        }
+        .cat-btn:hover {
+            background: rgba(123, 90, 68, 0.1);
+            border-color: #7b5a44;
+            transform: translateY(-2px);
+        }
+        .cat-btn.active {
+            background-color: #7b5a44;
+            border-color: #7b5a44;
+            color: white;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.8rem;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #f0e7de;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(123, 90, 68, 0.05), transparent);
+            transition: left 0.6s;
+        }
+        .product-card:hover::before {
+            left: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #e3d9cf;
+            box-shadow: 0 12px 24px rgba(70, 40, 20, 0.1);
+        }
+
+        .product-img {
+            background: linear-gradient(135deg, #f3ede7 0%, #e8dfd5 100%);
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .product-card:hover .product-img img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 1.2rem;
+        }
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #3e2a1f;
+            margin-bottom: 0.3rem;
+        }
+        .product-desc {
+            font-size: 0.85rem;
+            color: #7b6858;
+            margin: 0.4rem 0;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 0.8rem 0 0.4rem;
+        }
+        .price {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #b45f2b;
+        }
+        .unit {
+            font-size: 0.7rem;
+            color: #9b7c64;
+        }
+        .buy-simple {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #f0e7de;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .order-hint-simple {
+            font-size: 0.7rem;
+            color: #b88e6e;
+            background: #fef6ef;
+            padding: 6px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .float-buttons {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            gap: 16px;
+            z-index: 1000;
+        }
+        .float-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #7b5a44;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        .float-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            background: #5e3f2c;
+        }
+
+        .detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s;
+        }
+        .detail-modal.show {
+            display: flex;
+        }
+        .detail-content {
+            background: white;
+            max-width: 1000px;
+            width: 90%;
+            max-height: 85vh;
+            border-radius: 32px;
+            padding: 1.5rem 1.8rem;
+            border: 4px solid #8b694c;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.4s;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .detail-content::-webkit-scrollbar {
+            display: none;
+        }
+        .detail-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: #f0e7de;
+            border: none;
+            color: #4a2e23;
+            font-size: 1.3rem;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            z-index: 20;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .detail-close:hover {
+            background: #7b5a44;
+            color: white;
+            transform: rotate(90deg);
+        }
+        .detail-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-main {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 0.5rem;
+        }
+        .detail-gallery {
+            flex: 1.2;
+            min-width: 260px;
+        }
+        .detail-main-img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 24px;
+            border: 2px solid #e3d9cf;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+        }
+        .detail-thumbnails {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .thumb-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 16px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .thumb-img:hover, .thumb-img.active {
+            border-color: #7b5a44;
+            transform: scale(1.05);
+        }
+        .detail-info {
+            flex: 1;
+            min-width: 260px;
+        }
+        .detail-info h2 {
+            font-size: 1.8rem;
+            color: #4a2e23;
+            margin-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        .detail-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #b45f2b;
+            margin: 1rem 0;
+        }
+        .detail-desc {
+            color: #7b6858;
+            line-height: 1.6;
+            margin: 1rem 0;
+            display: block;
+            -webkit-line-clamp: unset;
+            overflow: visible;
+            white-space: normal;
+        }
+        .detail-spec {
+            background: #fef6ef;
+            border-radius: 16px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .detail-spec h4 {
+            color: #7b5a44;
+            margin-bottom: 0.8rem;
+        }
+        .detail-spec p {
+            color: #7b6858;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .side-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 24px;
+            width: 320px;
+            max-width: calc(100% - 48px);
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e9dfd4;
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.2s ease;
+        }
+        .side-panel.show {
+            display: flex;
+        }
+        .panel-header {
+            background: #4a2e23;
+            color: white;
+            padding: 14px 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            max-width: 500px;
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 24px;
-            background: #667eea;
+        .close-panel {
+            background: transparent;
+            border: none;
+            font-size: 1.6rem;
+            line-height: 1;
+            cursor: pointer;
             color: white;
-            text-decoration: none;
-            border-radius: 8px;
+            padding: 0;
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+            transition: opacity 0.2s;
         }
-        .btn:hover {
-            background: #5a67d8;
+        .close-panel:hover {
+            opacity: 1;
+            transform: none;
+            background: transparent;
+            color: #ffddbb;
+        }
+        .panel-body {
+            padding: 20px 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .paypal-btn-mock {
+            background: #ffc439;
+            color: #1a1a1a;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 40px;
+            margin: 12px 0;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            width: 100%;
+            justify-content: center;
+        }
+        .paypal-btn-mock:hover {
+            background: #e5b02e;
+            transform: scale(1.02);
+        }
+        .qr-image {
+            max-width: 220px;
+            width: 100%;
+            border-radius: 20px;
+            margin: 12px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e9dfd4;
+        }
+        .qr-caption {
+            font-size: 0.85rem;
+            color: #4a2e23;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        .badge-protect {
+            font-size:0.7rem; 
+            background:#fef6ef; 
+            display:inline-block; 
+            padding:2px 10px; 
+            border-radius:30px; 
+            margin-top:12px;
+        }
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #b89c84;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 680px) {
+            .hero h1 { font-size: 1.5rem; }
+            .detail-main { flex-direction: column; gap: 1.2rem; }
+            .thumb-img { width: 55px; height: 55px; }
+            .side-panel { width: 280px; right: 16px; bottom: 90px; }
+            .float-buttons { bottom: 16px; right: 16px; gap: 12px; }
+            .float-btn { width: 48px; height: 48px; font-size: 1.2rem; }
+            .detail-close {
+                width: 34px;
+                height: 34px;
+                font-size: 1.2rem;
+            }
+            .detail-content {
+                padding: 1rem 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>🎉 网站上线成功！</h1>
-        <p>这是属于 <strong>cao005123</strong> 的第一个静态网站</p>
-        <p>通过 GitHub Pages 免费托管</p>
-        <a href="#" class="btn">开始探索</a>
+<div class="container">
+    <div class="hero">
+        <h1>🌿 Elai Oud · Premium Selection</h1>
+        <div class="sub">A wisp of elegance, tranquil & refined | All-natural Agarwood</div>
     </div>
+
+    <div class="search-section">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search Oud, e.g. 'Kynam', 'Nha Trang', 'oil', 'bracelet'..." autocomplete="off">
+            <button id="searchBtn">Search</button>
+        </div>
+        <div id="searchInfo" class="search-info">✨ Search all categories · tap to clear</div>
+    </div>
+
+    <div class="category-bar">
+        <button class="cat-btn" data-cat="incense">Incense</button>
+        <button class="cat-btn" data-cat="bracelet">Bracelets</button>
+        <button class="cat-btn" data-cat="raw">Raw Materials</button>
+        <button class="cat-btn" data-cat="other">Other</button>
+        <button class="cat-btn" data-cat="sale">Special Price</button>
+        <button class="cat-btn" data-cat="all">All</button>
+    </div>
+
+    <div id="productGrid" class="product-grid"></div>
+    <div class="footer">A wisp of elegance · tranquil & refined | Premium natural Oud</div>
+</div>
+
+<div class="float-buttons">
+    <button class="float-btn" id="paypalBtn">💰</button>
+    <button class="float-btn" id="whatsappBtn">🤝</button>
+</div>
+
+<!-- PayPal Panel (replaces WeChat Pay) -->
+<div id="paypalPanel" class="side-panel">
+    <div class="panel-header">
+        <span>💳 PayPal Checkout</span>
+        <button class="close-panel" id="closePaypalBtn">✕</button>
+    </div>
+    <div class="panel-body">
+        <div class="paypal-btn-mock" id="mockPaypalButton">
+            <span>PayPal</span> 🛒
+        </div>
+        <div class="qr-caption">Secure payment via PayPal · Invoice upon request</div>
+        <span class="badge-protect">Official PayPal Gateway | Protected</span>
+        <div style="font-size:0.7rem; margin-top:12px; color:#b88e6e;">Note your order details & we'll confirm stock</div>
+    </div>
+</div>
+
+<!-- WhatsApp Panel (replaces WeChat) -->
+<div id="whatsappPanel" class="side-panel">
+    <div class="panel-header">
+        <span>📱 WhatsApp Business</span>
+        <button class="close-panel" id="closeWhatsappBtn">✕</button>
+    </div>
+    <div class="panel-body">
+        <img id="whatsappQrImg" class="qr-image" src="images/B.jpg" alt="WhatsApp QR Code">
+        <div class="qr-caption">Scan to chat on WhatsApp | Consultation & orders</div>
+        <span class="badge-protect">Elai Oud · Concierge</span>
+        <div style="font-size:0.7rem; margin-top:12px;">Message "Oud friend" for priority reply ✨</div>
+    </div>
+</div>
+
+<div id="detailModal" class="detail-modal">
+    <div class="detail-content">
+        <button class="detail-close" id="closeDetailBtn">✕</button>
+        <div class="detail-main" id="detailMain">
+            <!-- dynamic content -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Full product data (same as original but translated naming where appropriate)
+    const products = [
+        { id:1, name:"Rose Oud", desc:"Rose-ambergris accord, ethereal sweet fragrance. Calming, purifying and elegantly floral.", price:800, unit:"380 sticks/bundle", category:"incense", mainImage:"https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/NSKn/1080X1440/0023.jpg/webp", 
+          images:["https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/NSKn/1080X1440/0023.jpg/webp",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/tfTZ/1080X1440/0019.jpg/webp",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/avKK/1080X1440/0018.jpg/webp"], 
+          specs:"【Ingredients】Oud powder, rose, plant binder\n· 【Storage】Keep dry away from odors\n· 【Benefits】Calming, soothing, purifying\n· 【Weight】100g/bundle (~380 sticks)" },
+        { id:2, name:"Pear Blossom Imperial Incense", desc:"Gentle and long-lasting fragrance with natural sweet pear nectar, harmonizing Oud and pear.", price:800, unit:"310 sticks/bundle", category:"incense", mainImage:"https://s41.ax1x.com/2026/04/06/peNbHoT.jpg",
+          images:["https://s41.ax1x.com/2026/04/06/peNbHoT.jpg",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/PFkN/1080X1440/0020.jpg/webp",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/oT2K/1080X1440/0022.jpg/webp",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/7qE3/1080X1440/0021.jpg/webp"],
+          specs:"【Burn time】30-40min\n· 【Storage】Cool dry place\n· 【Ingredients】Pear, Hainan Oud, sandalwood, licorice\n· 【Net】100g/bundle ~310 sticks" },
+        { id:3, name:"Kynam Silk Threads", desc:"Ultimate calming, top-grade Kynam raw threads, rich in oil.", price:6800, unit:"520 sticks/bundle", category:"incense", mainImage:"https://s41.ax1x.com/2026/04/06/peNqNmq.jpg",
+          images:["https://s41.ax1x.com/2026/04/06/peNqNmq.jpg"],
+          specs:"Origin: Vietnam\n· Profile: intense cooling, sweet, mind-clearing" },
+        { id:4, name:"Nha Trang Oud", desc:"Fruity sweet, fine texture, from Nha Trang, Vietnam.", price:2000, unit:"680 sticks/bundle", category:"incense", mainImage:"https://s41.ax1x.com/2026/04/06/peNqrp4.jpg",
+          images:["https://s41.ax1x.com/2026/04/06/peNqrp4.jpg"],
+          specs:"Origin: Central Vietnam\n· Notes: honeyed, floral, gentle" },
+        { id:5, name:"Hainan Raw Slices", desc:"Rich resin, sweet floral fragrance.", price:100, unit:"/g", category:"raw", mainImage:"https://s41.ax1x.com/2026/04/07/peNjhqA.webp",
+          images:["https://s41.ax1x.com/2026/04/07/peNjhqA.webp"],
+          specs:"Origin: Hainan\n· Grade: premium raw material" },
+        { id:6, name:"Hainan Yellow Qi Slices", desc:"Golden translucent, cooling note with ginseng-like character.", price:128, unit:"/g", category:"raw", mainImage:"https://s41.ax1x.com/2026/04/07/peNjIat.webp",
+          images:["https://s41.ax1x.com/2026/04/07/peNjIat.webp"],
+          specs:"Origin: Hainan\n· Notes: cooling, herbal, sweet" },
+        { id:7, name:"Kynam Beads & Nuggets", desc:"Signature Kynam cooling sensation, spicy-numbing richness.", price:160, unit:"/g", category:"raw", mainImage:"https://s41.ax1x.com/2026/04/07/peNjoIP.webp",
+          images:["https://s41.ax1x.com/2026/04/07/peNjoIP.webp"],
+          specs:"Sinking grade · Strong qi sensation" },
+        { id:8, name:"Artisan Kynam Incense", desc:"Explosive top notes: cooling, fruity honey; mid: creamy floral; base: woody & clean.", price:4000, unit:"/bundle", category:"incense", mainImage:"https://s41.ax1x.com/2026/04/07/peNjbRS.webp",
+          images:["https://s41.ax1x.com/2026/04/07/peNjbRS.webp"],
+          specs:"【Composition】Kynam powder, spring water, plant binder\n· 【Size】1.8mm*21cm\n· 【Weight】100g/bundle (~230 sticks)\n· 【Burn】~60min per stick" },
+        { id:9, name:"Ultimate Cooling", desc:"Mellow sweet, milky, cooling & relaxing. Purifies space, aids meditation.", price:900, unit:"/bundle", category:"incense", 
+         mainImage:"https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/WHb1/1080X1440/0016.jpg/webp",
+          images:["https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/Rd7o/1080X1440/0017.jpg/webp",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/WHb1/1080X1440/0016.jpg/webp",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/TOe8/1080X1440/wushangqingliang.jpg/webp"],
+          specs:"【Size】1.5mm*21cm\n· 【Weight】100g/bundle ~400 sticks\n· 【Burn】~45min\n· 【Ingredients】Natural Oud, fruit binders, spring water" },
+        { id:10,name:"Kynam Mini Pearls", desc:"Rich oils, perfect for heating or blending.", price:18, unit:"/g", category:"raw", 
+         mainImage:"https://s41.ax1x.com/2026/04/07/peNjOMQ.webp",
+          images:["https://s41.ax1x.com/2026/04/07/peNjOMQ.webp"],
+          specs:"Intense aroma · Ideal for electric burner" },
+        { id:11,name:"Kynam Drilling Chips", desc:"Full of essential oils, clear cooling sensation.", price:25, unit:"/g", category:"raw", 
+         mainImage:"https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/69Zi/4032X3024/0089.jpg/webp",
+          images:["https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/69Zi/4032X3024/0089.jpg/webp",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/ewai/4032X3024/0091.jpg/webp",
+                  "https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/rZJB/4032X3024/0090.jpg/webp"],
+          specs:"Origin: Hainan\n· Cooling, sweet, long-lasting" },
+        { id:12,name:"Kynam Hand-shaved Silk", desc:"Voluminous curls, extremely oily, sweet, floral, mind-piercing coolness.", price:85, unit:"/g", category:"raw", 
+         mainImage:"https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/KPXP/0X0/0092.webp/webp",
+          images:["https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/KPXP/0X0/0092.webp/webp"],
+          specs:"Total weight: 58g · Pure handcrafted" },
+        { id:13,name:"White Kynam Freeform Bracelet", desc:"Raw wood, natural color, explosive Kynam scent right away.", price:1380, unit:"7-8mm", category:"bracelet",
+         mainImage:"https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/iW3o/0X0/0093.webp/webp",
+          images:["https://test.fukit.cn/autoupload/f/nWUgnqN5TnYrRR2ZFdGBMifNcKcqEnRmcljopnyJoMs/20260407/iW3o/0X0/0093.webp/webp"],
+          specs:"Beads: 7-8mm · Weight: 6.2g · Origin: Hainan" },
+        { id:14,name:"Sinking Grade Kynam Beads", desc:"King of oud, fully sinking, intense aroma fills the room, therapeutic and uplifting.", price:160, unit:"/g", category:"raw", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/30/69c9f8290556a.webp",
+          images:["https://picui.ogmua.cn/s1/2026/03/30/69c9f8290556a.webp","https://picui.ogmua.cn/s1/2026/03/30/69c9f828e3900.webp","https://picui.ogmua.cn/s1/2026/03/30/69c9f828dec80.webp"],
+          specs:"Sinking grade · Superb diffusion" },
+        { id:15,name:"Golden Amber Bangle", desc:"Rich golden resin, fine texture, sweet-cool dominant with elegant honey tone.", price:1500, unit:"/pc", category:"bracelet", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/30/69c9f975d0def.webp",
+          images:["https://picui.ogmua.cn/s1/2026/03/30/69c9f975d0def.webp","https://picui.ogmua.cn/s1/2026/03/30/69c9f975ec525.webp","https://picui.ogmua.cn/s1/2026/03/30/69c9f9748445b.webp"],
+          specs:"Weight: 7.5g" },
+        { id:16,name:"Kynam Round Beads 13mm", desc:"Kynam cooling, fruity honey, golden-red oil, fine grain, intense floral sweetness.", price:2880, unit:"13mm", category:"bracelet", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/30/69c9fb559c225.webp",
+          images:["https://picui.ogmua.cn/s1/2026/03/30/69c9fb559c225.webp","https://picui.ogmua.cn/s1/2026/03/30/69c9fb5649d41.webp","https://picui.ogmua.cn/s1/2026/03/30/69c9fb56641ce.webp","https://picui.ogmua.cn/s1/2026/03/30/69c9fb56655c3.webp"],
+          specs:"Size: 13mm · Weight: 14.4g · Origin: Hainan" },
+        { id:17,name:"Kynam Round Beads 14mm", desc:"Rich oil, dense texture, cooling and honey-sweet aroma layers.", price:2920, unit:"14mm", category:"bracelet", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/30/69ca014199dd2.webp",
+          images:["https://picui.ogmua.cn/s1/2026/03/30/69ca014199dd2.webp","https://picui.ogmua.cn/s1/2026/03/30/69ca0143282d2.webp","https://picui.ogmua.cn/s1/2026/03/30/69ca0142a9d53.webp","https://picui.ogmua.cn/s1/2026/03/30/69ca0142b59b7.webp"],
+          specs:"Size: 14mm · Weight: 14.6g" },
+        { id:18, name:"Phuoc Son Red Earth", desc:"Aged red soil oud, watermelon-cool, creamy, fruity, long-lasting, sweet nectar of oud.", price:28000, unit:"380 sticks/bundle", category:"incense", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/31/69cb3101b194b.webp", 
+          images:["https://picui.ogmua.cn/s1/2026/03/31/69cb3101b194b.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb31017def4.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb31019d791.webp"], 
+          specs:"【Size】1.7mm*21cm\n· 【Weight】100g/bundle (~380 sticks)\n· 【Burn】~40min per stick" },
+        { id:19,name:"Drilling Dust / Kynam Powder", desc:"Sticky, rich, immediate coolness, sweet, fruity, multi-layered for incense making or heating.", price:18, unit:"/g", category:"raw", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/31/69cb33788649f.webp",
+          images:["https://picui.ogmua.cn/s1/2026/03/31/69cb33788649f.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb33796c9f9.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb3379b8740.webp"],
+          specs:"Pure Kynam powder · Versatile" },
+        { id:20,name:"Golden Oil Silk", desc:"Crystal clear resin, mind-refreshing coolness, sweet and elegant.", price:300, unit:"/g", category:"raw", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/31/69cb349e52a05.webp",
+          images:["https://picui.ogmua.cn/s1/2026/03/31/69cb349e52a05.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb349e46464.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb349e282a3.webp"],
+          specs:"Aged 2 years · Premium" },
+        { id:21, name:"Hainan Old Material Oud Oil", desc:"Rich aged oil, medicinal and aromatic, clean sweet with cooling sensation.", price:1600, unit:"/bottle", category:"other", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/31/69cb5392f0f7d.webp", 
+          images:["https://picui.ogmua.cn/s1/2026/03/31/69cb5392f0f7d.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb391a41b3b.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb3919c8c92.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb539344186.webp"], 
+          specs:"Origin: Hainan · Steam distilled · Lasts ~10h on skin" },
+        { id:22,name:"White Kynam Sinking Material", desc:"Honey-like texture, sticky, Kynam signature fragrance, long-lasting coolness.", price:580, unit:"/g", category:"raw", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/31/69cb3d7fd6949.webp",
+          images:["https://picui.ogmua.cn/s1/2026/03/31/69cb3d7fd6949.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb3d804b7b1.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb3d806ffb1.webp"],
+          specs:"High density · Rare sinking grade" },
+        { id:23,name:"Kynam Thin Slices", desc:"Golden brown, clean, cooling & floral honey, elegant and long-lasting.", price:120, unit:"/g", category:"raw", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/03/31/69cb3e5743575.webp",
+          images:["https://picui.ogmua.cn/s1/2026/03/31/69cb3e5743575.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb3e57b005c.webp","https://picui.ogmua.cn/s1/2026/03/31/69cb3e57d8c63.webp"],
+          specs:"Recommended for electric heater · Elegant atmosphere" },
+        { id:24, name:"Hainan Oud · Binder-Free Cloud", desc:"Strong sweet honey, gentle and non-irritating.", price:180, unit:"/tube", category:"incense", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/04/01/69cd1c9a082bc.webp",
+          images:["https://picui.ogmua.cn/s1/2026/04/01/69cd1c9a082bc.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd1c99c2fbb.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd1c9a3a729.webp"],
+          specs:"Burn time: 35min · 41 pcs/tube" },
+        { id:25, name:"Red Earth · Binder-Free Cloud", desc:"Aged red soil, mellow, melon-cool, lingering and deep sleep enhancer.", price:380, unit:"/tube", category:"incense", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/04/01/69cd1eba16921.webp",
+          images:["https://picui.ogmua.cn/s1/2026/04/01/69cd1eba16921.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd1eba0426f.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd1eba20df7.webp"],
+          specs:"Burn time: 35min · 41 pcs/tube" },
+        { id:26,name:"Kynam Abacus Beads Bracelet", desc:"Soft, oily, natural finish, exceptional Kynam scent, leaves aroma on skin.", price:350, unit:"/pc", category:"bracelet", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/04/01/69cd1fc19bdff.webp",
+          images:["https://picui.ogmua.cn/s1/2026/04/01/69cd1fc19bdff.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd1fc1e8d85.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd1fc229bd9.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd1fc232674.webp"],
+          specs:"Beads: 5mm+ · Weight: 2.2-2.9g" },
+        { id:27,name:"National Treasure Kynam Bracelet", desc:"Translucent oil, multi-layered aroma, intense Kynam cooling and floral honey.", price:680, unit:"/pc", category:"bracelet", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/04/01/69cd218d66807.webp",
+          images:["https://picui.ogmua.cn/s1/2026/04/01/69cd218d66807.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd218d7f501.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd218d5cd0d.webp","https://picui.ogmua.cn/s1/2026/04/01/69cd218d6af10.webp"],
+          specs:"Beads: 8mm+ · Weight: 8.4-9.1g" },
+        { id:28,name:"High-Oil Kynam Sinking Grade · Flakes", desc:"Cooling, floral honey, rich oils. Perfect for blending or heating.", price:300, unit:"/jar", category:"other", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/04/02/69cdea7de4e0b.webp",
+          images:["https://picui.ogmua.cn/s1/2026/04/02/69cdea81628fd.webp","https://picui.ogmua.cn/s1/2026/04/02/69cdea8130289.webp","https://picui.ogmua.cn/s1/2026/04/02/69cdea7de4e0b.webp","https://picui.ogmua.cn/s1/2026/04/02/69cdea7880c9c.webp"],
+          specs:"Net weight: 2g standard" },
+        { id:29,name:"White Kynam Round Beads", desc:"Cool-sweet aroma, delicate oil lines, perfect gift or personal wear.", price:1100, unit:"/pc", category:"bracelet", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/04/02/69cdebcbd41de.webp",
+          images:["https://picui.ogmua.cn/s1/2026/04/02/69cdebcbd41de.webp","https://picui.ogmua.cn/s1/2026/04/02/69cdebcb7d5c7.webp","https://picui.ogmua.cn/s1/2026/04/02/69cdebcbaab92.webp"],
+          specs:"Weight: 9g+ · Size: 1mm · Origin: Hainan" },
+        { id:30, name:"Green Kynam Artisan Incense", desc:"Cooling, fruity honey, powerful diffusion.", price:2000, unit:"380 sticks/bundle", category:"incense", 
+         mainImage:"https://picui.ogmua.cn/s1/2026/04/02/69cded70b09d2.webp", 
+          images:["https://picui.ogmua.cn/s1/2026/04/02/69cded70ec594.webp","https://picui.ogmua.cn/s1/2026/04/02/69cded70f3d46.webp","https://picui.ogmua.cn/s1/2026/04/02/69cded70b09d2.webp"], 
+          specs:"【Size】1.7mm*21cm\n·【Weight】100g/bundle (~380 sticks)\n·【Burn】~45min\n· 【Ingredients】Green Kynam powder, plant binder, spring water" }
+    ];
+
+    let currentCategory = "all";
+    let currentSearchKeyword = "";
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, (m) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m] || m)); }
+
+    function getFilteredProducts() {
+        let filtered = [...products];
+        if(currentSearchKeyword.trim() !== "") {
+            const kw = currentSearchKeyword.trim().toLowerCase();
+            filtered = filtered.filter(p => p.name.toLowerCase().includes(kw) || p.desc.toLowerCase().includes(kw));
+        } else if(currentCategory !== "all") {
+            filtered = filtered.filter(p => p.category === currentCategory);
+        }
+        return filtered;
+    }
+
+    function renderProductGrid() {
+        const filtered = getFilteredProducts();
+        const grid = document.getElementById("productGrid");
+        const searchInfoDiv = document.getElementById("searchInfo");
+        if(filtered.length === 0) {
+            grid.innerHTML = `<div style="text-align:center; padding:50px 20px; color:#b29278;">✨ No products found ✨</div>`;
+            return;
+        }
+        searchInfoDiv.innerHTML = currentSearchKeyword ? `🔍 "${escapeHtml(currentSearchKeyword)}" · ${filtered.length} items` : `✨ ${filtered.length} premium oud selections · tap to clear`;
+        grid.innerHTML = filtered.map(product => `
+            <div class="product-card" data-id="${product.id}">
+                <div class="product-img"><img src="${product.mainImage}" alt="${escapeHtml(product.name)}" onerror="this.src='https://picsum.photos/id/1/300/200'"></div>
+                <div class="product-info">
+                    <div class="product-name">${escapeHtml(product.name)}</div>
+                    <div class="product-desc">${escapeHtml(product.desc)}</div>
+                    <div class="price-row"><span class="price">$${product.price}</span><span class="unit">${escapeHtml(product.unit)}</span></div>
+                    <div class="buy-simple"><span class="order-hint-simple">✨ Click for details ✨</span></div>
+                </div>
+            </div>
+        `).join('');
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const pid = parseInt(card.dataset.id);
+                const product = products.find(p => p.id === pid);
+                if(product) showProductDetail(product);
+            });
+        });
+    }
+
+    function showProductDetail(product) {
+        const modal = document.getElementById("detailModal");
+        const detailMain = document.getElementById("detailMain");
+        const images = product.images || [product.mainImage];
+        detailMain.innerHTML = `
+            <div class="detail-gallery">
+                <img id="detailMainImg" class="detail-main-img" src="${product.mainImage}" alt="${escapeHtml(product.name)}">
+                <div class="detail-thumbnails" id="detailThumbnails">
+                    ${images.map((img, idx) => `<img class="thumb-img ${idx === 0 ? 'active' : ''}" data-src="${img}" src="${img}" alt="thumbnail">`).join('')}
+                </div>
+            </div>
+            <div class="detail-info">
+                <h2>${escapeHtml(product.name)}</h2>
+                <div class="detail-price">$${product.price} ${escapeHtml(product.unit)}</div>
+                <div class="detail-desc">${escapeHtml(product.desc)}</div>
+                <div class="detail-spec"><h4>📦 Specifications</h4><p>${escapeHtml(product.specs).replace(/\n/g, '<br>')}</p></div>
+            </div>
+        `;
+        modal.classList.add("show");
+        setTimeout(() => {
+            const thumbs = document.querySelectorAll('.thumb-img');
+            const mainImg = document.getElementById('detailMainImg');
+            thumbs.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    thumbs.forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                    mainImg.src = thumb.dataset.src || thumb.src;
+                });
+            });
+        }, 50);
+    }
+
+    function performSearch() {
+        const kw = document.getElementById("searchInput").value.trim();
+        currentSearchKeyword = kw;
+        if(kw !== "") { currentCategory = "all"; document.querySelectorAll(".cat-btn").forEach(btn => { if(btn.dataset.cat === "all") btn.classList.add("active"); else btn.classList.remove("active"); }); }
+        renderProductGrid();
+    }
+    function switchCategory(cat) {
+        currentSearchKeyword = "";
+        document.getElementById("searchInput").value = "";
+        currentCategory = cat;
+        document.querySelectorAll(".cat-btn").forEach(btn => { if(btn.dataset.cat === cat) btn.classList.add("active"); else btn.classList.remove("active"); });
+        renderProductGrid();
+    }
+
+    function closeAllPanels() { document.getElementById("paypalPanel").classList.remove("show"); document.getElementById("whatsappPanel").classList.remove("show"); }
+    function showPaypalPanel() { closeAllPanels(); document.getElementById("paypalPanel").classList.add("show"); }
+    function showWhatsappPanel() { closeAllPanels(); document.getElementById("whatsappPanel").classList.add("show"); }
+
+    window.onload = () => {
+        document.querySelectorAll(".cat-btn").forEach(btn => btn.addEventListener("click", () => switchCategory(btn.dataset.cat)));
+        document.querySelector(".cat-btn[data-cat='all']").classList.add("active");
+        document.getElementById("searchBtn").onclick = performSearch;
+        document.getElementById("searchInput").onkeypress = (e) => { if(e.key === "Enter") performSearch(); };
+        document.getElementById("searchInfo").onclick = () => { if(currentSearchKeyword) { currentSearchKeyword = ""; document.getElementById("searchInput").value = ""; renderProductGrid(); } else if(currentCategory !== "all") switchCategory("all"); };
+        document.getElementById("paypalBtn").onclick = showPaypalPanel;
+        document.getElementById("whatsappBtn").onclick = showWhatsappPanel;
+        document.getElementById("closePaypalBtn").onclick = closeAllPanels;
+        document.getElementById("closeWhatsappBtn").onclick = closeAllPanels;
+        document.getElementById("mockPaypalButton")?.addEventListener("click", () => alert("PayPal checkout simulation. You can integrate real PayPal SDK here."));
+        const modal = document.getElementById("detailModal");
+        document.getElementById("closeDetailBtn").onclick = () => modal.classList.remove("show");
+        modal.onclick = (e) => { if(e.target === modal) modal.classList.remove("show"); };
+        window.onclick = (e) => { if(!e.target.closest(".side-panel") && !e.target.closest(".float-btn")) closeAllPanels(); };
+        renderProductGrid();
+    };
+</script>
 </body>
 </html>
